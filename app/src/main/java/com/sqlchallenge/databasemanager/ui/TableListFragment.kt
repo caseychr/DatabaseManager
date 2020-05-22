@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.sqlchallenge.databasemanager.R
 import com.sqlchallenge.databasemanager.ResourceView
 import com.sqlchallenge.databasemanager.ResourceViewObserver
-import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
+import com.sqlchallenge.databasemanager.viewmodel.TableListViewModel
 import kotlinx.android.synthetic.main.fragment_table_list.*
+
+const val TABLE_NAME = "TABLE_NAME"
 
 class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
-    lateinit var rowViewModel: RowListViewModel
+    lateinit var viewModel: TableListViewModel
     lateinit var tableAdapter: TableRecyclerAdapter
 
     override fun onCreateView(
@@ -29,9 +31,9 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rowViewModel = ViewModelProvider(this@TableListFragment)[RowListViewModel::class.java]
-        rowViewModel.tablesLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTablesView))
-        rowViewModel.getAllTables()
+        viewModel = ViewModelProvider(this@TableListFragment)[TableListViewModel::class.java]
+        apply { viewModel.tablesLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTablesView))
+            viewModel.getAllTables() }
     }
 
     private val getTablesView = object : ResourceView<List<String>> {
@@ -54,6 +56,12 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
     }
 
     override fun onClick(name: String) {
-        Toast.makeText(this@TableListFragment.context, name, Toast.LENGTH_SHORT).show()
+        val fragment = RowListFragment()
+        val bundle = Bundle()
+        bundle.putString(TABLE_NAME, name)
+        fragment.arguments = bundle
+        activity!!.supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null).commit()
     }
 }

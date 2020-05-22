@@ -3,6 +3,7 @@ package com.sqlchallenge.databasemanager
 import android.database.Cursor
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.sqlchallenge.databasemanager.model.Form
@@ -20,8 +21,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, TableListFragment()).commit()
+        loadFragment(TableListFragment())
+        //supportFragmentManager.beginTransaction()
+            //.replace(R.id.fragment_container, TableListFragment()).commit()
+    }
+
+    override fun onBackPressed() {
+        if(supportFragmentManager.findFragmentById(R.id.fragment_container) is RowListFragment) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onResume() {
@@ -29,8 +39,16 @@ class MainActivity : AppCompatActivity() {
         //db = SQLManagerDatabase.invoke(this)
         //checkFullDB()
     }
+}
 
-    /*private fun checkFullDB(): Boolean {
+fun AppCompatActivity.loadFragment(fragment: Fragment, addToBackStack: Boolean = false) {
+    val fragmentTransaction =  supportFragmentManager.beginTransaction()
+        .replace(R.id.fragment_container, fragment)
+    if(addToBackStack) {fragmentTransaction.addToBackStack(null)}
+    fragmentTransaction.commit()
+}
+
+/*private fun checkFullDB(): Boolean {
         val mCursor: Cursor = db.query("SELECT name FROM sqlite_master WHERE type='table'", null)
 
         val rowExists: Boolean
@@ -66,4 +84,3 @@ class MainActivity : AppCompatActivity() {
         println("Tables names: $arrTblNames")
         textView.text = arrTblNames.toString()
     }*/
-}

@@ -1,48 +1,31 @@
 package com.sqlchallenge.databasemanager.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.sqlchallenge.databasemanager.Resource
+import com.sqlchallenge.databasemanager.model.ColumnInformation
 import com.sqlchallenge.databasemanager.model.Form
-import com.sqlchallenge.databasemanager.persistence.SQLManagerDatabase
-import com.sqlchallenge.databasemanager.repository.SQLRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
-class RowListViewModel(application: Application): AndroidViewModel(application) {
-
-    var repo: SQLRepository =
-        SQLRepository(SQLManagerDatabase.invoke(application.applicationContext).getFormDao())
+class RowListViewModel(application: Application): BaseViewModel(application){
 
     val formsLiveData = MutableLiveData<Resource<List<Form>>>()
-    val tablesLiveData = MutableLiveData<Resource<List<String>>>()
+    val columnsLiveData = MutableLiveData<Resource<List<ColumnInformation>>>()
+    val rowCountLiveData = MutableLiveData<Resource<Int>>()
+    val tableDataLiveData = MutableLiveData<Resource<Any>>()
 
     fun getForms() {
-        CoroutineScope(Job() + Dispatchers.Main).launch {
-            formsLiveData.value = repo.getForms()
-        }
+        formsLiveData.loadResource { repo.getForms() }
     }
 
-    fun getAllTables() {
-        CoroutineScope(Job() + Dispatchers.Main).launch {
-            tablesLiveData.value = repo.getAllTables()
-        }
+    fun getColumns(tableName: String) {
+        columnsLiveData.loadResource { repo.getColumns(tableName) }
+    }
+
+    fun getRowCount(tableName: String) {
+        rowCountLiveData.loadResource { repo.getRowCount(tableName) }
+    }
+
+    fun getTableData(tableName: String) {
+        tableDataLiveData.loadResource { repo.getTableData(tableName) }
     }
 }
-
-/*
-class RowListViewModel(application: Application, private val repository: SQLRepository =
-        SQLRepository(SQLManagerDatabase.invoke(application.applicationContext).getFormDao())
-): AndroidViewModel(application) {
-
-    val formsLiveData = MutableLiveData<Resource<List<Form>>>()
-
-    fun getForms() {
-        CoroutineScope(Job() + Dispatchers.Main).launch {
-            formsLiveData.value = repository.getForms()
-        }
-    }
-}*/
