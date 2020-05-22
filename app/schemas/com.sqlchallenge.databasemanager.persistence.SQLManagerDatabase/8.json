@@ -1,0 +1,81 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 8,
+    "identityHash": "a11ebf06cf396fd14fdfd39f63bc9eb3",
+    "entities": [
+      {
+        "tableName": "Form",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ApiName` TEXT, `FieldDataTableName` TEXT, `_id` INTEGER, `ParentFieldDataTableName` TEXT, `TemplateVal` INTEGER, `Title` TEXT, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "ApiName",
+            "columnName": "ApiName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "FieldDataTableName",
+            "columnName": "FieldDataTableName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ParentFieldDataTableName",
+            "columnName": "ParentFieldDataTableName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "TemplateVal",
+            "columnName": "TemplateVal",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Title",
+            "columnName": "Title",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "_id_Form",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `_id_Form` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "ApiName_Form",
+            "unique": false,
+            "columnNames": [
+              "ApiName"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `ApiName_Form` ON `${TABLE_NAME}` (`ApiName`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a11ebf06cf396fd14fdfd39f63bc9eb3')"
+    ]
+  }
+}
