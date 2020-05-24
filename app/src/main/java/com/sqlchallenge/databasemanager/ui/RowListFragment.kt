@@ -21,6 +21,7 @@ class RowListFragment : Fragment() {
 
     lateinit var tableName: String
     lateinit var rowViewModel: RowListViewModel
+    lateinit var displayLoader: UICommunicator
 
     lateinit var columnInfoAdapter: ColumnInfoRecyclerAdapter
 
@@ -34,6 +35,7 @@ class RowListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        displayLoader = activity as UICommunicator
         tableName = arguments?.getString(TABLE_NAME) ?: "Form"
         subscribeObservers()
         tableInfoLayout.tableNameTextView.text = tableName
@@ -58,25 +60,18 @@ class RowListFragment : Fragment() {
                 layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = columnInfoAdapter
             }
-            println("COLUMN INFO: $data")
         }
-
-        override fun showLoading(isLoading: Boolean) {
-
-        }
+        override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
     }
 
     private val getRowCount = object : ResourceView<Int> {
         override fun showData(data: Int) {
-            println("ROW COUNT: $data")
             tableInfoLayout.rowsNumberTextView.text = "(${data.toString()} Rows)"
             rowViewModel.getTableData(tableName)
         }
-
-        override fun showLoading(isLoading: Boolean) {
-        }
+        override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
     }
@@ -85,9 +80,7 @@ class RowListFragment : Fragment() {
         override fun showData(data: Any) {
             println("TABLE DATA: ${data.toString()}")
         }
-
-        override fun showLoading(isLoading: Boolean) {
-        }
+        override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
     }

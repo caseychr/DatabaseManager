@@ -21,6 +21,7 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     lateinit var viewModel: TableListViewModel
     lateinit var tableAdapter: TableRecyclerAdapter
+    lateinit var displayLoader: UICommunicator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +33,7 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        displayLoader = activity as UICommunicator
         viewModel = ViewModelProvider(this@TableListFragment)[TableListViewModel::class.java]
         apply { viewModel.tablesLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTablesView))
             viewModel.getAllTables() }
@@ -44,10 +46,8 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
                 layoutManager = GridLayoutManager(this@TableListFragment.context, 3)
                 adapter = tableAdapter
             }
-
         }
-        override fun showLoading(isLoading: Boolean) {
-        }
+        override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
     }
