@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.sqlchallenge.databasemanager.R
 import com.sqlchallenge.databasemanager.ResourceView
 import com.sqlchallenge.databasemanager.ResourceViewObserver
@@ -47,13 +48,15 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
         }
         override fun showLoading(isLoading: Boolean) {
         }
-
-        override fun showError(error: Throwable) {
-            println("ERROR: ${error.message}")
-            Toast.makeText(this@TableListFragment.context, error.message, Toast.LENGTH_SHORT).show()
-        }
+        override fun showError(error: Throwable) { handleError(error) }
 
     }
+
+    private fun handleError(error: Throwable) {
+        error.printStackTrace()
+        Snackbar.make(this@TableListFragment.view!!, error.message.toString(), Snackbar.LENGTH_SHORT).show()
+    }
+
 
     override fun onClick(name: String) {
         val fragment = RowListFragment()

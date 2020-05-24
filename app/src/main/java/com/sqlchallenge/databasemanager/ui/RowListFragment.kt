@@ -6,17 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.sqlchallenge.databasemanager.R
 import com.sqlchallenge.databasemanager.ResourceView
 import com.sqlchallenge.databasemanager.ResourceViewObserver
 import com.sqlchallenge.databasemanager.model.ColumnInformation
 import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_row_list.*
+import kotlinx.android.synthetic.main.layout_table_info.view.*
 
 class RowListFragment : Fragment() {
-    lateinit var tableName: String
 
+    lateinit var tableName: String
     lateinit var rowViewModel: RowListViewModel
+
+    lateinit var columnInfoAdapter: ColumnInfoRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,43 +35,49 @@ class RowListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tableName = arguments?.getString(TABLE_NAME) ?: "Form"
-        println(tableName)
-        textView.text = tableName
-        rowViewModel = ViewModelProvider(this@RowListFragment)[RowListViewModel::class.java]
-        rowViewModel.columnsLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTableView))
-        rowViewModel.getColumns(tableName)
+        subscribeObservers()
+        tableInfoLayout.tableNameTextView.text = tableName
+    }
 
-        rowViewModel.rowCountLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getRowCount))
-        rowViewModel.tableDataLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTableData))
+    private fun subscribeObservers() {
+        rowViewModel = ViewModelProvider(this@RowListFragment)[RowListViewModel::class.java]
+        rowViewModel.apply {
+            columnsLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTableView))
+            rowCountLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getRowCount))
+            tableDataLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTableData))
+        }
+        // Fetch Column info of table and row count
+        rowViewModel.getColumns(tableName)
+        rowViewModel.getRowCount(tableName)
     }
 
     private val getTableView = object : ResourceView<List<ColumnInformation>> {
         override fun showData(data: List<ColumnInformation>) {
-            rowViewModel.getRowCount(tableName)
+            columnInfoAdapter = ColumnInfoRecyclerAdapter(data)
+            columnRecyclerView.apply {
+                layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = columnInfoAdapter
+            }
+            println("COLUMN INFO: $data")
         }
 
         override fun showLoading(isLoading: Boolean) {
 
         }
-
-        override fun showError(error: Throwable) {
-            println("ERROR: ${error.message}")
-        }
+        override fun showError(error: Throwable) { handleError(error) }
 
     }
 
     private val getRowCount = object : ResourceView<Int> {
         override fun showData(data: Int) {
             println("ROW COUNT: $data")
+            tableInfoLayout.rowsNumberTextView.text = "(${data.toString()} Rows)"
             rowViewModel.getTableData(tableName)
         }
 
         override fun showLoading(isLoading: Boolean) {
         }
-
-        override fun showError(error: Throwable) {
-            println("ERROR: ${error.message}")
-        }
+        override fun showError(error: Throwable) { handleError(error) }
 
     }
 
@@ -76,10 +88,14 @@ class RowListFragment : Fragment() {
 
         override fun showLoading(isLoading: Boolean) {
         }
-
-        override fun showError(error: Throwable) {
-            println("ERROR: ${error.message}")
-        }
+        override fun showError(error: Throwable) { handleError(error) }
 
     }
+
+    private fun handleError(error: Throwable) {
+        error.printStackTrace()
+        Snackbar.make(this@RowListFragment.view!!, error.message.toString(), Snackbar.LENGTH_SHORT).show()
+    }
+
+
 }
