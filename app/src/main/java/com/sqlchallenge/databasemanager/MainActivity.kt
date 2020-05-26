@@ -1,31 +1,21 @@
 package com.sqlchallenge.databasemanager
 
-import android.database.Cursor
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.sqlchallenge.databasemanager.model.Form
-import com.sqlchallenge.databasemanager.persistence.SQLManagerDatabase
 import com.sqlchallenge.databasemanager.ui.RowListFragment
 import com.sqlchallenge.databasemanager.ui.TableListFragment
 import com.sqlchallenge.databasemanager.ui.UICommunicator
-import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), UICommunicator {
-
-    //lateinit var db: SQLManagerDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         loadFragment(TableListFragment())
-        //supportFragmentManager.beginTransaction()
-            //.replace(R.id.fragment_container, TableListFragment()).commit()
     }
 
     override fun onBackPressed() {
@@ -34,12 +24,6 @@ class MainActivity : AppCompatActivity(), UICommunicator {
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //db = SQLManagerDatabase.invoke(this)
-        //checkFullDB()
     }
 
     override fun displayProgress(isLoading: Boolean) {
