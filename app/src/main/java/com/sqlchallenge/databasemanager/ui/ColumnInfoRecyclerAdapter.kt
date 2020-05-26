@@ -33,6 +33,6 @@ class ColumnInfoRecyclerAdapter(
     }
 
     private fun showPrimaryKey(columnInfo: ColumnInformation): Int {
-        return if(columnInfo.pk.equals("1")) {View.VISIBLE} else {View.GONE}
+        return if(columnInfo.isPk.equals("1")) {View.VISIBLE} else {View.GONE}
     }
 }

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sqlchallenge.databasemanager.R
@@ -55,11 +54,13 @@ class RowListFragment : Fragment() {
 
     private val getTableView = object : ResourceView<List<ColumnInformation>> {
         override fun showData(data: List<ColumnInformation>) {
+            println("COLUMNS: ${data.toString()}" )
             columnInfoAdapter = ColumnInfoRecyclerAdapter(data)
             columnRecyclerView.apply {
                 layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = columnInfoAdapter
             }
+            rowViewModel.getTableData(tableName)
         }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
@@ -69,15 +70,14 @@ class RowListFragment : Fragment() {
     private val getRowCount = object : ResourceView<Int> {
         override fun showData(data: Int) {
             tableInfoLayout.rowsNumberTextView.text = "(${data.toString()} Rows)"
-            rowViewModel.getTableData(tableName)
         }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
     }
 
-    private val getTableData = object : ResourceView<Any> {
-        override fun showData(data: Any) {
+    private val getTableData = object : ResourceView<String> {
+        override fun showData(data: String) {
             println("TABLE DATA: ${data.toString()}")
         }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }

@@ -8,14 +8,9 @@ import com.sqlchallenge.databasemanager.model.Form
 
 class RowListViewModel(application: Application): BaseViewModel(application){
 
-    val formsLiveData = MutableLiveData<Resource<List<Form>>>()
     val columnsLiveData = MutableLiveData<Resource<List<ColumnInformation>>>()
     val rowCountLiveData = MutableLiveData<Resource<Int>>()
-    val tableDataLiveData = MutableLiveData<Resource<Any>>()
-
-    fun getForms() {
-        formsLiveData.loadResource { repo.getForms() }
-    }
+    val tableDataLiveData = MutableLiveData<Resource<String>>()
 
     fun getColumns(tableName: String) {
         columnsLiveData.loadResource { repo.getColumns(tableName) }

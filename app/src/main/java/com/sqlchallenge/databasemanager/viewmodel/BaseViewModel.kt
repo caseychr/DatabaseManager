@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.sqlchallenge.databasemanager.Resource
-import com.sqlchallenge.databasemanager.persistence.SQLManagerDatabase
+import com.sqlchallenge.databasemanager.db.DatabaseManager
 import com.sqlchallenge.databasemanager.repository.SQLRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
-    val repo: SQLRepository = SQLRepository(SQLManagerDatabase.invoke(application.applicationContext).getFormDao())
+    val repo: SQLRepository = SQLRepository(DatabaseManager(application))//SQLManagerDatabase.invoke(application.applicationContext).getFormDao())
+
 
 
     fun <T> MutableLiveData<Resource<T>>.loadResource(valueLoader: suspend () -> Resource<T>) {
