@@ -1,9 +1,11 @@
 package com.sqlchallenge.databasemanager.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sqlchallenge.databasemanager.R
 import com.sqlchallenge.databasemanager.ResourceView
 import com.sqlchallenge.databasemanager.ResourceViewObserver
-import com.sqlchallenge.databasemanager.model.ColumnInformation
+import com.sqlchallenge.databasemanager.model.ColumnData
 import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
 import kotlinx.android.synthetic.main.fragment_row_list.*
 import kotlinx.android.synthetic.main.layout_table_info.view.*
@@ -45,23 +47,16 @@ class RowListFragment : Fragment() {
         rowViewModel.apply {
             columnsLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTableView))
             rowCountLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getRowCount))
-            tableDataLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTableData))
+            tableDataLiveDataTest.observe(viewLifecycleOwner, ResourceViewObserver(getTableDataTest))
         }
         // Fetch Column info of table and row count
         rowViewModel.getColumns(tableName)
         rowViewModel.getRowCount(tableName)
     }
 
-    private val getTableView = object : ResourceView<List<ColumnInformation>> {
-        override fun showData(data: List<ColumnInformation>) {
-            println("COLUMNS: ${data.toString()}" )
-            columnInfoAdapter = ColumnInfoRecyclerAdapter(data)
-            columnRecyclerView.apply {
-                layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = columnInfoAdapter
-            }
-            rowViewModel.getTableData(tableName)
-        }
+    private val getTableView = object : ResourceView<List<ColumnData>> {
+        @RequiresApi(Build.VERSION_CODES.N)
+        override fun showData(data: List<ColumnData>) { rowViewModel.getTableData(data, tableName) }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
@@ -76,9 +71,13 @@ class RowListFragment : Fragment() {
 
     }
 
-    private val getTableData = object : ResourceView<String> {
-        override fun showData(data: String) {
-            println("TABLE DATA: ${data.toString()}")
+    private val getTableDataTest = object : ResourceView<List<ColumnData>> {
+        override fun showData(data: List<ColumnData>) {
+            columnInfoAdapter = ColumnInfoRecyclerAdapter(data)
+            columnRecyclerView.apply {
+                layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = columnInfoAdapter
+            }
         }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }

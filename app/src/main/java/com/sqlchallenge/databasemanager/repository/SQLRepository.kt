@@ -1,8 +1,10 @@
 package com.sqlchallenge.databasemanager.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.sqlchallenge.databasemanager.Resource
 import com.sqlchallenge.databasemanager.db.DatabaseManager
-import com.sqlchallenge.databasemanager.model.ColumnInformation
+import com.sqlchallenge.databasemanager.model.ColumnData
 
 class SQLRepository(private val manager: DatabaseManager) {
 
@@ -10,7 +12,7 @@ class SQLRepository(private val manager: DatabaseManager) {
         return loadApiResource { manager.getAllTables() }
     }
 
-    suspend fun getColumns(tableName: String): Resource<List<ColumnInformation>> {
+    suspend fun getColumns(tableName: String): Resource<List<ColumnData>> {
         return loadApiResource { manager.getTableColumnInfo(tableName) }
     }
 
@@ -18,8 +20,9 @@ class SQLRepository(private val manager: DatabaseManager) {
         return loadApiResource { manager.getTableRowCount(tableName) }
     }
 
-    suspend fun getTableData(tableName: String): Resource<String> {
-        return loadApiResource { manager.getAllTableData(tableName) }
+    @RequiresApi(Build.VERSION_CODES.N)
+    suspend fun getTableData(columnData: List<ColumnData>, tableName: String): Resource<List<ColumnData>> {
+        return loadApiResource { manager.getTableData(columnData, tableName) }
     }
 
     suspend fun <T> loadApiResource(loader: suspend() -> T): Resource<T> {

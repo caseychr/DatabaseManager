@@ -3,7 +3,7 @@ package com.sqlchallenge.databasemanager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.nhaarman.mockitokotlin2.whenever
-import com.sqlchallenge.databasemanager.model.ColumnInformation
+import com.sqlchallenge.databasemanager.model.ColumnData
 import com.sqlchallenge.databasemanager.repository.SQLRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -49,8 +49,8 @@ class RepositoryTest {
     fun testGetColumnInformationSuccess() {
         runBlocking {
             val query = SimpleSQLiteQuery("PRAGMA table_info($mockTableName);")
-            val mockColumnInfo = ColumnInformation("cid", "columnName", "type", "notNull", "0", "0")
-            val mockColumnList = mutableListOf<ColumnInformation>()
+            val mockColumnInfo = ColumnData("cid", "columnName", "type", "notNull", "0", "0")
+            val mockColumnList = mutableListOf<ColumnData>()
             mockColumnList.add(mockColumnInfo)
             whenever(dao.getColumns(query)).thenReturn(mockColumnList)
 
