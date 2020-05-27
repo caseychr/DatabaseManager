@@ -1,7 +1,7 @@
 package com.sqlchallenge.databasemanager
 
 import androidx.test.core.app.ApplicationProvider
-import com.sqlchallenge.databasemanager.model.ColumnInformation
+import com.sqlchallenge.databasemanager.model.ColumnData
 import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -16,8 +16,8 @@ class RowListViewModelTest {
         val classUnderTest = RowListViewModel(ApplicationProvider.getApplicationContext())
 
         runBlocking {
-            val mockColumnInfo = ColumnInformation("cid", "columnName", "type", "notNull", "0", "0")
-            val mockColumnList = mutableListOf<ColumnInformation>()
+            val mockColumnInfo = ColumnData("cid", "columnName", "type", "notNull", "0", "0")
+            val mockColumnList = mutableListOf<ColumnData>()
             mockColumnList.add(mockColumnInfo)
 
             classUnderTest.columnsLiveData.postValue(Resource.Success(mockColumnList))
