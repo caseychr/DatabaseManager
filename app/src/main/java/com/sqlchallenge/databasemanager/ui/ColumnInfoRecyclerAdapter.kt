@@ -27,10 +27,11 @@ class ColumnInfoRecyclerAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.columnName.text = columnInfoList[position].name
+        println("DATA TYPE: ${columnInfoList[position].name}, ${columnInfoList[position].type}")
         holder.columnType.text = columnInfoList[position].type
         holder.keyImage.visibility = showPrimaryKey(columnInfoList[position])
 
-        val valueAdapter = ValueRecyclerAdapter(columnInfoList[position].dataList)
+        val valueAdapter = columnInfoList[position].dataList?.let { ValueRecyclerAdapter(it) }
         holder.valueRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = valueAdapter
@@ -45,6 +46,6 @@ class ColumnInfoRecyclerAdapter(
     }
 
     private fun showPrimaryKey(columnInfo: ColumnData): Int {
-        return if(columnInfo.isPk.equals("1")) {View.VISIBLE} else {View.GONE}
+        return if(columnInfo.isPk.equals("1")) {View.VISIBLE} else {View.INVISIBLE}
     }
 }

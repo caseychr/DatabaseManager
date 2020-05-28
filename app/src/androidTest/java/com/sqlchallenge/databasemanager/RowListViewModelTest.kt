@@ -5,6 +5,8 @@ import com.sqlchallenge.databasemanager.model.ColumnData
 import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 class RowListViewModelTest {
@@ -16,7 +18,7 @@ class RowListViewModelTest {
         val classUnderTest = RowListViewModel(ApplicationProvider.getApplicationContext())
 
         runBlocking {
-            val mockColumnInfo = ColumnData("cid", "columnName", "type", "notNull", "0", "0")
+            val mockColumnInfo = ColumnData("cid", "columnName", "type", mutableListOf("0", "1", "2", "3"))
             val mockColumnList = mutableListOf<ColumnData>()
             mockColumnList.add(mockColumnInfo)
 
@@ -82,11 +84,14 @@ class RowListViewModelTest {
         val classUnderTest = RowListViewModel(ApplicationProvider.getApplicationContext())
 
         runBlocking {
+            val mockColumnInfo = ColumnData("cid", "columnName", "type", mutableListOf("0", "1", "2", "3"))
+            val mockColumnList = mutableListOf<ColumnData>()
+            mockColumnList.add(mockColumnInfo)
             val mockTableDataList = listOf( "tableData1, tableData2, tableData3")
 
             classUnderTest.tableDataLiveData.postValue(Resource.Success(mockTableDataList))
 
-            classUnderTest.getTableData(mockTableName)
+            classUnderTest.getTableData(mockColumnList, mockTableName)
 
             val emission = classUnderTest.tableDataLiveData.value
             Assert.assertEquals(Resource.Success(mockTableDataList), emission)
@@ -98,11 +103,15 @@ class RowListViewModelTest {
         val classUnderTest = RowListViewModel(ApplicationProvider.getApplicationContext())
 
         runBlocking {
+            val mockColumnInfo = ColumnData("cid", "columnName", "type", mutableListOf("0", "1", "2", "3"))
+            val mockColumnList = mutableListOf<ColumnData>()
+            mockColumnList.add(mockColumnInfo)
+
             val mockListError = Throwable()
 
             classUnderTest.tableDataLiveData.postValue(Resource.Error(mockListError))
 
-            classUnderTest.getTableData(mockTableName)
+            classUnderTest.getTableData(mockColumnList, mockTableName)
 
             val emission = classUnderTest.tableDataLiveData.value
             Assert.assertTrue(emission is Resource.Error)

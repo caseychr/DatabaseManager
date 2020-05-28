@@ -59,6 +59,7 @@ dependencies {
     // Mockito
     androidTestImplementation "org.mockito:mockito-core:$mockito"
     androidTestImplementation "org.mockito:mockito-android:$mockito"
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
 
     // Recyclerview
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"

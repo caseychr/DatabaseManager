@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,10 +16,10 @@ import kotlinx.android.synthetic.main.fragment_table_list.*
 
 const val TABLE_NAME = "TABLE_NAME"
 
-class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
+class TableListFragment : Fragment(), ColumnRecyclerAdapter.TableOnClick {
 
     lateinit var viewModel: TableListViewModel
-    lateinit var tableAdapter: TableRecyclerAdapter
+    lateinit var tableAdapter: ColumnRecyclerAdapter
     lateinit var displayLoader: UICommunicator
 
     override fun onCreateView(
@@ -33,6 +32,7 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         displayLoader = activity as UICommunicator
         viewModel = ViewModelProvider(this@TableListFragment)[TableListViewModel::class.java]
         apply { viewModel.tablesLiveData.observe(viewLifecycleOwner, ResourceViewObserver(getTablesView))
@@ -41,7 +41,8 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     private val getTablesView = object : ResourceView<List<String>> {
         override fun showData(data: List<String>) {
-            tableAdapter = TableRecyclerAdapter(data, this@TableListFragment)
+            println("TABLE DATA: $data")
+            tableAdapter = ColumnRecyclerAdapter(data, this@TableListFragment)
             tableRecyclerView.apply {
                 layoutManager = GridLayoutManager(this@TableListFragment.context, 3)
                 adapter = tableAdapter
