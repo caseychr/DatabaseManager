@@ -36,16 +36,18 @@ class DatabaseHelper(context: Context) :
             this.readableDatabase
             close()
             try {
-                copyDBFile()
+                copyDBFile(INPUT_FILE)
             } catch (mIOException: IOException) {
                 throw Error("ErrorCopyingDataBase")
+                mIOException.printStackTrace()
             }
         }
     }
 
     @Throws(IOException::class)
-    private fun copyDBFile() {
-        val mInput: InputStream = mContext.getAssets().open(DB_NAME)
+    private fun copyDBFile(inputFile: File) {
+        //val mInput: InputStream = mContext.getAssets().open(DB_NAME)
+        val mInput: FileInputStream = FileInputStream(inputFile)
         //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
         val mOutput: OutputStream = FileOutputStream(DB_PATH + DB_NAME)
         val mBuffer = ByteArray(1024)
@@ -85,18 +87,7 @@ class DatabaseHelper(context: Context) :
         private const val DB_NAME = "DataForensics.db"
         private var DB_PATH = ""
         private const val DB_VERSION = 8
-    }
-
-    fun fetch(db: SQLiteDatabase): Cursor? {
-        val columns =
-            arrayOf<String>("_id", "ApiName", "Title")
-        val cursor: Cursor =
-            db.query("Form", null, null, null, null, null, null)
-        if (cursor != null) {
-            cursor.moveToFirst()
-
-        }
-        return cursor
+        lateinit var INPUT_FILE: File
     }
 
     init {

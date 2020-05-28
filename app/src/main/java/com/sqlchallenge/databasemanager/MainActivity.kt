@@ -1,21 +1,47 @@
 package com.sqlchallenge.databasemanager
 
+import android.Manifest
+import android.R.attr
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
+import com.sqlchallenge.databasemanager.db.DatabaseHelper
+import com.sqlchallenge.databasemanager.db.DatabaseManager
 import com.sqlchallenge.databasemanager.ui.RowListFragment
 import com.sqlchallenge.databasemanager.ui.TableListFragment
 import com.sqlchallenge.databasemanager.ui.UICommunicator
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
+
+const val FILE_SELECT_CODE = 0
 class MainActivity : AppCompatActivity(), UICommunicator {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        loadFragment(TableListFragment())
+        verifyStoragePermissions(this)
+        databaseBtn.setOnClickListener {
+            if(!databaseBtn.text.contains("Load")) {
+                val intent = Intent()
+                intent.type = "*/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(Intent.createChooser(intent,"Choose File to Upload.."), FILE_SELECT_CODE)
+            } else {
+                databaseBtn.visibility = View.GONE
+                loadFragment(TableListFragment())
+            }
+
+
+        }
     }
 
     override fun onBackPressed() {
@@ -35,6 +61,55 @@ class MainActivity : AppCompatActivity(), UICommunicator {
             fragment_container.visibility = View.VISIBLE
         }
     }
+
+    private fun loadFileUri(uriPath: String?) {
+        if(uriPath == null) {Toast.makeText(this@MainActivity.applicationContext,
+            "$uriPath is not usable by this app. Please choose something else.", Toast.LENGTH_LONG).show()
+        } else {
+            var path = uriPath?.replace("/document/raw:", "")
+            println("PATH: $path, /storage/emulated/0/Download/DataForensics.db\"")
+            DatabaseHelper.INPUT_FILE = File(path)
+            databaseBtn.text = "Click to Load Database"
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == FILE_SELECT_CODE) {
+                loadFileUri(data!!.data?.path)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    fun verifyStoragePermissions(activity: Activity?) {
+        // Check if we have write permission
+        val permission =
+            ActivityCompat.checkSelfPermission(
+                activity!!,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                activity,
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
+            )
+        }
+    }
+    private val REQUEST_EXTERNAL_STORAGE = 1
+    private val PERMISSIONS_STORAGE = arrayOf<String>(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 }
 
 fun AppCompatActivity.loadFragment(fragment: Fragment, addToBackStack: Boolean = false) {
@@ -43,40 +118,3 @@ fun AppCompatActivity.loadFragment(fragment: Fragment, addToBackStack: Boolean =
     if(addToBackStack) {fragmentTransaction.addToBackStack(null)}
     fragmentTransaction.commit()
 }
-
-/*private fun checkFullDB(): Boolean {
-        val mCursor: Cursor = db.query("SELECT name FROM sqlite_master WHERE type='table'", null)
-
-        val rowExists: Boolean
-
-        rowExists = if (mCursor.moveToFirst()) {
-            // DO SOMETHING WITH CURSOR
-            println("TRUE There's stuff here: ${mCursor.columnCount}")
-            true
-        } else {
-            // I AM EMPTY
-            println("FALSE Crap: ${mCursor.columnCount}")
-            false
-        }
-        println("${mCursor.columnNames.toString()}")
-        printTables()
-        return rowExists
-    }
-
-    fun printTables() {
-        val arrTblNames = ArrayList<String>()
-        val c: Cursor = db.query("SELECT * FROM GWT", null)
-            //db.query("SELECT name FROM sqlite_master WHERE type='table'", null)
-
-        //println("initCD: ${c.columnCount},  ${c.getColumnName(0)}")
-        if (c.moveToFirst()) {
-            while (!c.isAfterLast) {
-                println("initC: ${c.columnCount},  ${c.getColumnName(0)}")
-                arrTblNames.add(c.getString(c.getColumnIndex("EditedByTablet")))
-                c.moveToNext()
-            }
-        }
-        println("Tables count: ${arrTblNames.size}")
-        println("Tables names: $arrTblNames")
-        textView.text = arrTblNames.toString()
-    }*/

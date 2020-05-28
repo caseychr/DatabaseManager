@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
-    val repo: SQLRepository = SQLRepository(DatabaseManager(application))//SQLManagerDatabase.invoke(application.applicationContext).getFormDao())
+    val repo: SQLRepository = SQLRepository(DatabaseManager(application))
 
 
 

@@ -73,6 +73,7 @@ class RowListFragment : Fragment() {
 
     private val getTableDataTest = object : ResourceView<List<ColumnData>> {
         override fun showData(data: List<ColumnData>) {
+            println("TABLE DATA: $data")
             columnInfoAdapter = ColumnInfoRecyclerAdapter(data)
             columnRecyclerView.apply {
                 layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)

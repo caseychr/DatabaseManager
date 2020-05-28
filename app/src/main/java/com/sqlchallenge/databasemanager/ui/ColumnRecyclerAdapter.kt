@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sqlchallenge.databasemanager.R
 
-class TableRecyclerAdapter(private val tableList: List<String>,
-                        private val tableOnClick: TableOnClick)
-    : RecyclerView.Adapter<TableRecyclerAdapter.ViewHolder>() {
+class ColumnRecyclerAdapter(private val tableList: List<String>,
+                            private val tableOnClick: TableOnClick)
+    : RecyclerView.Adapter<ColumnRecyclerAdapter.ViewHolder>() {
 
     interface TableOnClick {
         fun onClick(name: String)
