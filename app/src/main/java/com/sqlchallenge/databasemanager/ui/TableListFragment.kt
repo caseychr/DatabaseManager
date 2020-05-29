@@ -16,10 +16,10 @@ import kotlinx.android.synthetic.main.fragment_table_list.*
 
 const val TABLE_NAME = "TABLE_NAME"
 
-class TableListFragment : Fragment(), ColumnRecyclerAdapter.TableOnClick {
+class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     lateinit var viewModel: TableListViewModel
-    lateinit var tableAdapter: ColumnRecyclerAdapter
+    lateinit var tableAdapter: TableRecyclerAdapter
     lateinit var displayLoader: UICommunicator
 
     override fun onCreateView(
@@ -42,7 +42,7 @@ class TableListFragment : Fragment(), ColumnRecyclerAdapter.TableOnClick {
     private val getTablesView = object : ResourceView<List<String>> {
         override fun showData(data: List<String>) {
             println("TABLE DATA: $data")
-            tableAdapter = ColumnRecyclerAdapter(data, this@TableListFragment)
+            tableAdapter = TableRecyclerAdapter(data, this@TableListFragment)
             tableRecyclerView.apply {
                 layoutManager = GridLayoutManager(this@TableListFragment.context, 3)
                 adapter = tableAdapter

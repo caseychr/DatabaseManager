@@ -3,27 +3,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/darker_gray"
-    android:layout_width="wrap_content"
+    android:backgroundTintMode="@android:color/darker_gray"
+    android:background="@drawable/column_background"
+    android:padding="4dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/layoutColumn"
-        layout="@layout/layout_column"
+    <ImageView
+        android:id="@+id/primaryKeyImg"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/columnNameTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_key_gold_24dp" />
+
+    <TextView
+        android:id="@+id/columnNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/valueRecyclerView"
+        android:text="Column Name"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/columnTypeTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/valueRecyclerView"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/columnTypeTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:text="Column Type"
+        android:maxLines="1"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/layoutColumn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutColumn" />
+        app:layout_constraintTop_toBottomOf="@+id/middleLine" />
 </androidx.constraintlayout.widget.ConstraintLayout>

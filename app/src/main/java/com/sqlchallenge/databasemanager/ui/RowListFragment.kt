@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sqlchallenge.databasemanager.R
 import com.sqlchallenge.databasemanager.ResourceView
@@ -18,13 +18,13 @@ import com.sqlchallenge.databasemanager.viewmodel.RowListViewModel
 import kotlinx.android.synthetic.main.fragment_row_list.*
 import kotlinx.android.synthetic.main.layout_table_info.view.*
 
+
 class RowListFragment : Fragment() {
 
     lateinit var tableName: String
     lateinit var rowViewModel: RowListViewModel
     lateinit var displayLoader: UICommunicator
-
-    lateinit var columnInfoAdapter: ColumnInfoRecyclerAdapter
+    lateinit var dataValueAdapter: DataRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,10 +74,10 @@ class RowListFragment : Fragment() {
     private val getTableDataTest = object : ResourceView<List<ColumnData>> {
         override fun showData(data: List<ColumnData>) {
             println("TABLE DATA: $data")
-            columnInfoAdapter = ColumnInfoRecyclerAdapter(data)
+            dataValueAdapter = DataRecyclerAdapter(data)
             columnRecyclerView.apply {
-                layoutManager = LinearLayoutManager(this@RowListFragment.context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = columnInfoAdapter
+                layoutManager = GridLayoutManager(this@RowListFragment.context, data.size, GridLayoutManager.VERTICAL, false)
+                adapter = dataValueAdapter
             }
         }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }

@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/darker_gray"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/primaryKeyImg"
@@ -26,8 +26,8 @@
 
     <TextView
         android:id="@+id/columnNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Column Name"
         android:background="@drawable/value_background"
         android:textColor="@android:color/black"
@@ -38,8 +38,8 @@
 
     <TextView
         android:id="@+id/columnTypeTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Column Type"
         android:background="@drawable/value_background"
         android:textColor="@android:color/black"
