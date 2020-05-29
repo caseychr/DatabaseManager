@@ -1,20 +1,16 @@
 package com.sqlchallenge.databasemanager
 
 import android.Manifest
-import android.R.attr
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import com.sqlchallenge.databasemanager.db.DatabaseHelper
-import com.sqlchallenge.databasemanager.db.DatabaseManager
 import com.sqlchallenge.databasemanager.ui.RowListFragment
 import com.sqlchallenge.databasemanager.ui.TableListFragment
 import com.sqlchallenge.databasemanager.ui.UICommunicator
@@ -66,10 +62,9 @@ class MainActivity : AppCompatActivity(), UICommunicator {
         if(uriPath == null) {Toast.makeText(this@MainActivity.applicationContext,
             "$uriPath is not usable by this app. Please choose something else.", Toast.LENGTH_LONG).show()
         } else {
-            var path = uriPath?.replace("/document/raw:", "")
-            println("PATH: $path, /storage/emulated/0/Download/DataForensics.db\"")
+            val path = uriPath.replace("/document/raw:", "")
             DatabaseHelper.INPUT_FILE = File(path)
-            databaseBtn.text = "Click to Load Database"
+            databaseBtn.text = getString(R.string.load_db)
         }
     }
 

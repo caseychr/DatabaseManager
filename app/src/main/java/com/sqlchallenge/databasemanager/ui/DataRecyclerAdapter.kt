@@ -14,7 +14,9 @@ private const val COLUMN_INFO = 1
 class DataRecyclerAdapter(val columnInfoList: List<ColumnData>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var valueList: List<String>?
-    init { valueList = composeValueList() }
+    init {
+        valueList = composeValueList()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if(viewType == COLUMN_INFO) {
@@ -25,7 +27,8 @@ class DataRecyclerAdapter(val columnInfoList: List<ColumnData>): RecyclerView.Ad
     }
 
     override fun getItemCount(): Int {
-        return (columnInfoList.size + valueList!!.size)
+        val rows = valueList!!.size / columnInfoList.size
+        return if(rows > 0 && rows != null){columnInfoList.size * rows} else {columnInfoList.size}
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -40,10 +43,14 @@ class DataRecyclerAdapter(val columnInfoList: List<ColumnData>): RecyclerView.Ad
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position <= columnInfoList.size-1) {
-            COLUMN_INFO
+        if(columnInfoList[0].dataList !=  null && columnInfoList[0].dataList!!.size > 0) {
+            return if(position <= columnInfoList.size-1) {
+                COLUMN_INFO
+            } else {
+                0
+            }
         } else {
-            0
+            return COLUMN_INFO
         }
     }
 
@@ -72,6 +79,11 @@ class DataRecyclerAdapter(val columnInfoList: List<ColumnData>): RecyclerView.Ad
                 }
             }
         } while (columnInfoList[columnInfoList.size-1].dataList!!.isNotEmpty())
+        if(columnInfoList[0].dataList!!.isEmpty()) {
+            for(list in columnInfoList) {
+                list.dataList = mutableListOf()
+            }
+        }
         return valueList
     }
 }

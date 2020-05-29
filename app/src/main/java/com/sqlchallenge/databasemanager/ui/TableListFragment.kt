@@ -41,7 +41,6 @@ class TableListFragment : Fragment(), TableRecyclerAdapter.TableOnClick {
 
     private val getTablesView = object : ResourceView<List<String>> {
         override fun showData(data: List<String>) {
-            println("TABLE DATA: $data")
             tableAdapter = TableRecyclerAdapter(data, this@TableListFragment)
             tableRecyclerView.apply {
                 layoutManager = GridLayoutManager(this@TableListFragment.context, 3)

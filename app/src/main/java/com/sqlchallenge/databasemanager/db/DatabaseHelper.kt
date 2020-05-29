@@ -1,30 +1,15 @@
 package com.sqlchallenge.databasemanager.db
 
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build
 import java.io.*
-import java.sql.SQLException
-
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     private var mDataBase: SQLiteDatabase? = null
     private val mContext: Context
     private var mNeedUpdate = false
-
-    @Throws(IOException::class)
-    fun updateDataBase() {
-        if (mNeedUpdate) {
-            val dbFile =
-                File(DB_PATH + DB_NAME)
-            if (dbFile.exists()) dbFile.delete()
-            copyDataBase()
-            mNeedUpdate = false
-        }
-    }
 
     private fun checkDataBase(): Boolean {
         val dbFile = File(DB_PATH + DB_NAME)
@@ -46,26 +31,14 @@ class DatabaseHelper(context: Context) :
 
     @Throws(IOException::class)
     private fun copyDBFile(inputFile: File) {
-        //val mInput: InputStream = mContext.getAssets().open(DB_NAME)
-        val mInput: FileInputStream = FileInputStream(inputFile)
-        //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
+        val mInput = FileInputStream(inputFile)
         val mOutput: OutputStream = FileOutputStream(DB_PATH + DB_NAME)
         val mBuffer = ByteArray(1024)
-        var mLength: Int = 0
+        var mLength = 0
         while (mInput.read(mBuffer).also({ mLength = it }) > 0) mOutput.write(mBuffer, 0, mLength)
         mOutput.flush()
         mOutput.close()
         mInput.close()
-    }
-
-    @Throws(SQLException::class)
-    fun openDataBase(): Boolean {
-        mDataBase = SQLiteDatabase.openDatabase(
-            DB_PATH + DB_NAME,
-            null,
-            SQLiteDatabase.CREATE_IF_NECESSARY
-        )
-        return mDataBase != null
     }
 
     @Synchronized
@@ -91,9 +64,7 @@ class DatabaseHelper(context: Context) :
     }
 
     init {
-        DB_PATH =
-            if (Build.VERSION.SDK_INT >= 17) context.getApplicationInfo().dataDir.toString() + "/databases/" else "/data/data/" + context.getPackageName()
-                .toString() + "/databases/"
+        DB_PATH = context.getApplicationInfo().dataDir.toString() + "/databases/"
         mContext = context
         copyDataBase()
         this.readableDatabase
