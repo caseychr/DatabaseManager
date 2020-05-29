@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Database Manager</string>
     <string name="hello_world">Welcome to import database...</string>
+    <string name="load_db">Click to Load Database</string>
 </resources>

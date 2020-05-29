@@ -39,7 +39,7 @@ class DatabaseManager(context: Context) {
     fun getTableColumnInfo(tableName: String): List<ColumnData> {
         val colInfoList = ArrayList<ColumnData>()
         var colInfo: ColumnData? = null
-        val cursor = database.rawQuery("SELECT * FROM PRAGMA_TABLE_INFO(\"$tableName\")", null)
+        val cursor = database.rawQuery("PRAGMA table_info($tableName)", null)
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
                 colInfo = ColumnData(cursor.getString(cursor.getColumnIndex("name")),
@@ -49,6 +49,7 @@ class DatabaseManager(context: Context) {
                 cursor.moveToNext()
             }
         }
+
         return colInfoList
     }
 

@@ -56,7 +56,8 @@ class RowListFragment : Fragment() {
 
     private val getTableView = object : ResourceView<List<ColumnData>> {
         @RequiresApi(Build.VERSION_CODES.N)
-        override fun showData(data: List<ColumnData>) { rowViewModel.getTableData(data, tableName) }
+        override fun showData(data: List<ColumnData>) {
+            rowViewModel.getTableData(data, tableName) }
         override fun showLoading(isLoading: Boolean) { displayLoader.displayProgress(isLoading) }
         override fun showError(error: Throwable) { handleError(error) }
 
@@ -73,7 +74,6 @@ class RowListFragment : Fragment() {
 
     private val getTableDataTest = object : ResourceView<List<ColumnData>> {
         override fun showData(data: List<ColumnData>) {
-            println("TABLE DATA: $data")
             dataValueAdapter = DataRecyclerAdapter(data)
             columnRecyclerView.apply {
                 layoutManager = GridLayoutManager(this@RowListFragment.context, data.size, GridLayoutManager.VERTICAL, false)
